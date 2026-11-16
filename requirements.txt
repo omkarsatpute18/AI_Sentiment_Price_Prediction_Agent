@@ -1,0 +1,25 @@
+
+# Data processing
+pandas
+numpy
+
+# Data collection
+requests
+apify-client
+exa-py
+yfinance
+
+# Machine learning
+scikit-learn
+joblib
+
+# Visualization
+streamlit
+plotly
+
+# Environment variables
+python-dotenv
+
+# Development and testing
+jupyter
+pytest
