@@ -6,6 +6,24 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
+import sys
+from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+import plotly.graph_objects as go
+
+# Add project root to Python import path
+BASE_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE_DIR))
+
+from src.agent.gemini_assistant import generate_answer
+
+DATA_DIR = BASE_DIR / "data" / "processed"
+REPORT_DIR = BASE_DIR / "reports"
+
+
 
 # ==================================================
 # PAGE CONFIGURATION
@@ -640,6 +658,217 @@ else:
 
 # ==================================================
 # FOOTER
+
+
+# ==================================================
+# AI STOCK RESEARCH ASSISTANT
+# ==================================================
+
+st.divider()
+st.header("💬 AI Stock Research Assistant")
+
+st.write(
+    f"Ask questions about {selected_stock}, its technical indicators, "
+    "social sentiment and experimental ML predictions."
+)
+
+
+# --------------------------------------------------
+# PREPARE STOCK CONTEXT
+# --------------------------------------------------
+
+latest_feature = (
+    stock_features.iloc[-1]
+    if not stock_features.empty
+    else None
+)
+
+latest_sentiment = (
+    stock_sentiment.iloc[-1]
+    if not stock_sentiment.empty
+    else None
+)
+
+def safe_value(value):
+    if value is None or pd.isna(value):
+        return None
+    return float(value)
+
+
+stock_context = {
+    "stock_name": selected_stock,
+    "stock_code": stock_code,
+    "market": market,
+    "currency": currency,
+    "latest_price": safe_value(latest_price),
+    "latest_price_date": latest["date"].strftime("%Y-%m-%d"),
+    "daily_change_percent": safe_value(daily_change),
+
+    "technical_indicators": {
+        "rsi_14": (
+            safe_value(latest_feature["rsi_14"])
+            if latest_feature is not None else None
+        ),
+        "macd": (
+            safe_value(latest_feature["macd"])
+            if latest_feature is not None else None
+        ),
+        "macd_signal": (
+            safe_value(latest_feature["macd_signal"])
+            if latest_feature is not None else None
+        ),
+        "sma_20": (
+            safe_value(latest_feature["sma_20"])
+            if latest_feature is not None else None
+        ),
+        "sma_50": (
+            safe_value(latest_feature["sma_50"])
+            if latest_feature is not None else None
+        ),
+        "volume": (
+            safe_value(latest_feature["volume"])
+            if latest_feature is not None else None
+        )
+    },
+
+    "social_sentiment": {
+        "date": (
+            latest_sentiment["date"].strftime("%Y-%m-%d")
+            if latest_sentiment is not None else None
+        ),
+        "total_posts": (
+            int(latest_sentiment["total_posts"])
+            if latest_sentiment is not None else None
+        ),
+        "financial_sentiment": (
+            safe_value(latest_sentiment["financial_sentiment"])
+            if latest_sentiment is not None else None
+        ),
+        "business_sentiment": (
+            safe_value(latest_sentiment["business_sentiment"])
+            if latest_sentiment is not None else None
+        ),
+        "scored_posts": (
+            int(latest_sentiment["scored_post_count"])
+            if latest_sentiment is not None else None
+        )
+    }
+}
+
+
+# --------------------------------------------------
+# LOAD LATEST MODEL PREDICTIONS
+# --------------------------------------------------
+
+prediction_file = REPORT_DIR / "latest_predictions.csv"
+
+if prediction_file.exists():
+
+    prediction_data = pd.read_csv(
+        prediction_file,
+        dtype={"stock_code": str}
+    )
+
+    selected_model_predictions = prediction_data[
+        prediction_data["stock_code"] == stock_code
+    ]
+
+    stock_context["ml_predictions"] = (
+        selected_model_predictions[
+            [
+                "model",
+                "predicted_direction",
+                "probability_up",
+                "probability_down"
+            ]
+        ].to_dict(orient="records")
+    )
+
+else:
+
+    stock_context["ml_predictions"] = []
+
+
+# --------------------------------------------------
+# CHAT SESSION MANAGEMENT
+# --------------------------------------------------
+
+if "assistant_messages" not in st.session_state:
+    st.session_state.assistant_messages = []
+
+if "assistant_stock" not in st.session_state:
+    st.session_state.assistant_stock = selected_stock
+
+# Reset conversation when the selected stock changes
+
+if st.session_state.assistant_stock != selected_stock:
+
+    st.session_state.assistant_messages = []
+    st.session_state.assistant_stock = selected_stock
+
+
+# --------------------------------------------------
+# DISPLAY CHAT HISTORY
+# --------------------------------------------------
+
+for message in st.session_state.assistant_messages:
+
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+
+# --------------------------------------------------
+# CHAT INPUT
+# --------------------------------------------------
+
+user_question = st.chat_input(
+    f"Ask something about {selected_stock}..."
+)
+
+if user_question:
+
+    st.session_state.assistant_messages.append({
+        "role": "user",
+        "content": user_question
+    })
+
+    with st.chat_message("user"):
+        st.markdown(user_question)
+
+    with st.chat_message("assistant"):
+
+        with st.spinner("Analyzing stock data..."):
+
+            answer = generate_answer(
+                question=user_question,
+                stock_context=stock_context,
+                chat_history=st.session_state.assistant_messages[:-1]
+            )
+
+        st.markdown(answer)
+
+    st.session_state.assistant_messages.append({
+        "role": "assistant",
+        "content": answer
+    })
+
+
+# --------------------------------------------------
+# SAMPLE QUESTIONS
+# --------------------------------------------------
+
+with st.expander("💡 Try asking these questions"):
+
+    st.markdown(
+        """
+        - Explain the current technical indicators.
+        - What does the RSI value indicate?
+        - What is the current social media sentiment?
+        - Explain the machine learning predictions.
+        - Give me an overall summary of this stock.
+        """
+    )
+
 # ==================================================
 
 st.divider()
