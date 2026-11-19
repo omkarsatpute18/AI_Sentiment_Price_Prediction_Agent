@@ -26,7 +26,15 @@ APIFY_TOKEN = os.getenv("APIFY_API_TOKEN")
 LIHKG_ACTOR_ID = os.getenv("LIHKG_ACTOR_ID")
 
 # Start with two threads to control scraping costs.
-MAX_THREADS = 2
+# Selected relevant threads from the expanded LIHKG search.
+SELECTED_THREAD_IDS = [
+    "4181061",
+    "4180878",
+    "4179443",
+    "4182148",
+    "4179515",
+    "4181817"
+]
 
 
 # --------------------------------------------------
@@ -70,24 +78,16 @@ def load_search_results():
 # 4. EXTRACT UNIQUE THREAD IDS
 # --------------------------------------------------
 
-def extract_thread_ids(records):
+def extract_thread_ids():
 
-    thread_ids = list(dict.fromkeys(
-        str(record["thread_id"])
-        for record in records
-        if record.get("thread_id")
-    ))
+    thread_ids = SELECTED_THREAD_IDS
 
     if not thread_ids:
-        raise ValueError("No thread IDs found in search dataset.")
+        raise ValueError("No thread IDs selected.")
 
-    selected_ids = thread_ids[:MAX_THREADS]
+    logger.info("Selected %s threads for extraction.", len(thread_ids))
 
-    logger.info("Found %s unique thread IDs.", len(thread_ids))
-    logger.info("Selected %s threads for testing.", len(selected_ids))
-
-    return selected_ids
-
+    return thread_ids
 
 # --------------------------------------------------
 # 5. RUN LIHKG THREAD ACTOR
@@ -161,9 +161,7 @@ def main():
 
     client = ApifyClient(APIFY_TOKEN)
 
-    records = load_search_results()
-
-    thread_ids = extract_thread_ids(records)
+    thread_ids = extract_thread_ids()
 
     results = scrape_threads(client, thread_ids)
 
