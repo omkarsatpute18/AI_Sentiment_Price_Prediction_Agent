@@ -1,0 +1,17 @@
+{
+    "source": "LIHKG",
+    "market": "Hong Kong",
+    "stock": "Tencent",
+    "original_posts_excluded": 2,
+    "unclassified_replies_skipped": 3,
+    "sentiment_summary": {
+        "financial": {
+            "total_replies": 1,
+            "average_sentiment_score": -0.9798
+        },
+        "business": {
+            "total_replies": 3,
+            "average_sentiment_score": -0.714
+        }
+    }
+}
