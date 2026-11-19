@@ -1,0 +1,128 @@
+{
+    "Hong Kong_0700": {
+        "market": "Hong Kong",
+        "stock_code": "0700",
+        "stock_name": "Tencent",
+        "total_records": 9,
+        "analysed_unique_posts": 6,
+        "financial_sentiment": {
+            "analysed_posts": 1,
+            "average_sentiment_score": -0.9798,
+            "positive_count": 0,
+            "negative_count": 1,
+            "neutral_count": 0
+        },
+        "business_sentiment": {
+            "analysed_posts": 3,
+            "average_sentiment_score": -0.714,
+            "positive_count": 0,
+            "negative_count": 3,
+            "neutral_count": 0
+        }
+    },
+    "South Korea_005930": {
+        "market": "South Korea",
+        "stock_code": "005930",
+        "stock_name": "삼성전자",
+        "total_records": 200,
+        "analysed_unique_posts": 88,
+        "financial_sentiment": {
+            "analysed_posts": 73,
+            "average_sentiment_score": -0.2527,
+            "positive_count": 15,
+            "negative_count": 36,
+            "neutral_count": 22
+        },
+        "business_sentiment": {
+            "analysed_posts": 32,
+            "average_sentiment_score": -0.1456,
+            "positive_count": 6,
+            "negative_count": 12,
+            "neutral_count": 14
+        }
+    },
+    "South Korea_000660": {
+        "market": "South Korea",
+        "stock_code": "000660",
+        "stock_name": "SK하이닉스",
+        "total_records": 200,
+        "analysed_unique_posts": 97,
+        "financial_sentiment": {
+            "analysed_posts": 88,
+            "average_sentiment_score": -0.1109,
+            "positive_count": 22,
+            "negative_count": 32,
+            "neutral_count": 34
+        },
+        "business_sentiment": {
+            "analysed_posts": 30,
+            "average_sentiment_score": -0.012,
+            "positive_count": 8,
+            "negative_count": 9,
+            "neutral_count": 13
+        }
+    },
+    "South Korea_005380": {
+        "market": "South Korea",
+        "stock_code": "005380",
+        "stock_name": "현대차",
+        "total_records": 200,
+        "analysed_unique_posts": 117,
+        "financial_sentiment": {
+            "analysed_posts": 90,
+            "average_sentiment_score": -0.3383,
+            "positive_count": 15,
+            "negative_count": 51,
+            "neutral_count": 24
+        },
+        "business_sentiment": {
+            "analysed_posts": 49,
+            "average_sentiment_score": -0.3147,
+            "positive_count": 9,
+            "negative_count": 27,
+            "neutral_count": 13
+        }
+    },
+    "South Korea_373220": {
+        "market": "South Korea",
+        "stock_code": "373220",
+        "stock_name": "LG에너지솔루션",
+        "total_records": 200,
+        "analysed_unique_posts": 134,
+        "financial_sentiment": {
+            "analysed_posts": 121,
+            "average_sentiment_score": -0.4428,
+            "positive_count": 11,
+            "negative_count": 75,
+            "neutral_count": 35
+        },
+        "business_sentiment": {
+            "analysed_posts": 47,
+            "average_sentiment_score": -0.3679,
+            "positive_count": 5,
+            "negative_count": 25,
+            "neutral_count": 17
+        }
+    },
+    "South Korea_207940": {
+        "market": "South Korea",
+        "stock_code": "207940",
+        "stock_name": "삼성바이오로직스",
+        "total_records": 139,
+        "analysed_unique_posts": 73,
+        "financial_sentiment": {
+            "analysed_posts": 62,
+            "average_sentiment_score": -0.3857,
+            "positive_count": 7,
+            "negative_count": 32,
+            "neutral_count": 23
+        },
+        "business_sentiment": {
+            "analysed_posts": 19,
+            "average_sentiment_score": -0.3365,
+            "positive_count": 0,
+            "negative_count": 7,
+            "neutral_count": 12
+        }
+    }
+}
